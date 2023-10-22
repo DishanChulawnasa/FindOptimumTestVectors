@@ -132,11 +132,22 @@ int main() {
     //    }
 
     }
+    const std::string outputFileName = "OptimumTestVectors.txt";
+    std::ofstream outputFile(outputFileName);
 
-    std::cout << "TEST VECTORS\n";
-    for (const std::string& vector : testVectors) {
-        std::cout << vector << "\n";
+    if (!outputFile.is_open()) {
+        std::cerr << "Failed to open the file: " << outputFileName << std::endl;
+        return 1; // Return an error code
     }
+
+    for (const std::string& vector : testVectors) {
+        outputFile << vector << "\n";
+    }
+
+    //std::cout << "TEST VECTORS\n";
+    //for (const std::string& vector : testVectors) {
+    //    std::cout << vector << "\n";
+    //}
 
     return 0;
 }
