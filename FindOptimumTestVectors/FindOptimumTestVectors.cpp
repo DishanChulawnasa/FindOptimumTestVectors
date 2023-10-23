@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <set>
 #include <vector>
 #include <fstream>
 
@@ -58,6 +59,7 @@ void performComparisons(const std::vector<std::string>& inputVectors, std::vecto
         if (count == 0 && countk == 1) {
             INTERVectors.insert(INTERVectors.end(), inputVectors[0]);
         }
+        
     }
     
 }
@@ -97,19 +99,19 @@ int main() {
 
     testVectors.insert(testVectors.end(), INTERVectors[emptyINTERVectorIndex - 1][0].begin(), INTERVectors[emptyINTERVectorIndex - 1][0].end());
 
-  //  std::cout << "TEST VECTOR " << "\n";
-  //  for (const std::string& vector : testVectors) {
-  //      std::cout << vector << "\n";
-  //  }
+    std::cout << "TEST VECTOR " << "\n";
+    for (const std::string& vector : testVectors) {
+        std::cout << vector << "\n";
+    }
 
-  //  std::cout << "Z1:\n";
-  //  for (const std::string& vector : ZVectors[0]) {
-  //      std::cout << vector << "\n";
-  //  }
+    std::cout << "Z1:\n";
+    for (const std::string& vector : ZVectors[0]) {
+        std::cout << vector << "\n";
+    }
 
 
     int emptyZVectorIndex[1000]{};
-
+    int emptyZVector = 0;
     for (int iterations = 1; iterations <= 49; ++iterations) {
 
         performComparisons(ZVectors[iterations-1], INTERVectors[0][iterations], ZVectors[iterations]);
@@ -121,17 +123,41 @@ int main() {
                 break;
             }
         }
+        if (ZVectors[iterations].empty()) {
+            emptyZVector = iterations;
+            break;
+        }
 
         testVectors.insert(testVectors.end(), INTERVectors[emptyZVectorIndex[iterations] - 1][iterations].begin(), INTERVectors[emptyZVectorIndex[iterations] - 1][iterations].end());
 
         
 
-    //    std::cout << "Z2:\n";
-    //    for (const std::string& vector : ZVectors[iterations]) {
-    //        std::cout << vector << "\n";
-    //    }
+        std::cout << "Z2:\n";
+        for (const std::string& vector : ZVectors[iterations]) {
+            std::cout << vector << "\n";
+        }
 
     }
+
+    std::cout << "Final Z\n";
+    for (const std::string& vector : ZVectors[emptyZVector - 2]) {
+        std::cout << vector << "\n";
+    }
+
+
+    testVectors.insert(testVectors.end(), ZVectors[emptyZVector - 1].begin(), ZVectors[emptyZVector - 1].end());
+
+    std::set<std::string> uniqueStrings;
+    std::vector<std::string> resulttestvectors;
+
+    for (const std::string& str : testVectors) {
+        if (uniqueStrings.find(str) == uniqueStrings.end()) {
+            // This is a unique string, so we add it to the result vector and the set.
+            uniqueStrings.insert(str);
+            resulttestvectors.push_back(str);
+        }
+    }
+
     const std::string outputFileName = "OptimumTestVectors.txt";
     std::ofstream outputFile(outputFileName);
 
@@ -140,14 +166,14 @@ int main() {
         return 1; // Return an error code
     }
 
-    for (const std::string& vector : testVectors) {
+    for (const std::string& vector : resulttestvectors) {
         outputFile << vector << "\n";
     }
 
-    //std::cout << "TEST VECTORS\n";
-    //for (const std::string& vector : testVectors) {
-    //    std::cout << vector << "\n";
-    //}
+    std::cout << "TEST VECTORS\n";
+    for (const std::string& vector : resulttestvectors) {
+        std::cout << vector << "\n";
+    }
 
     return 0;
 }
